@@ -35,6 +35,7 @@ This is personal use, one event, low traffic (probably under 50 people). Simple 
 ### 4. Come back and edit
 - A guest can return and change or cancel their RSVP ("not coming anymore").
 - No accounts and no passwords. See "Identity" below.
+- Guest-facing names are first name plus last name.
 
 ### 5. Change log
 - Every create, edit, cancel, claim, and release is recorded with a timestamp, who, and before/after values.
@@ -43,22 +44,32 @@ This is personal use, one event, low traffic (probably under 50 people). Simple 
 ### 6. Host view
 - Totals: confirmed, declined, total head count.
 - Full guest list with notes.
+- Merge RSVPs (see "Merging RSVPs").
 - Bring list status.
 - Change log.
 - Edit the bring list and event details (date, time, address).
 
-## Identity: the "no crazy permissions" question
+## Identity (decided): no accounts, honor system
 
-This is the main design decision. Options:
+The audience is not tech savvy, so there is no login, password, PIN, or link to save. The goal is to stop accidents, not to stop determined people. We are **not** solving for someone RSVPing as another person. The change log is the safety net.
 
-| Option | How it works | Pros | Cons |
-|---|---|---|---|
-| A. Browser token | On first RSVP, store a random token in the browser (localStorage or cookie). That token lets them edit later. | Zero friction, no typing | Lost on new device or cleared cookies |
-| B. Private edit link | After RSVP, show a unique link (`/rsvp/<secret>`) to bookmark or text to themselves | Works on any device | Guests must save the link |
-| C. Name match | Guest types the same name again to edit | Dead simple | Anyone can edit anyone's RSVP, typos create duplicates |
-| D. Email magic link | Emails a link | Standard | Needs email sending, more setup |
+**How a guest gets back to their RSVP:**
+1. **Browser memory (automatic).** After RSVPing, the browser remembers which RSVP is theirs. Next visit: "Welcome back, Sue. Want to change your RSVP?" They do nothing to set this up.
+2. **"Already RSVPed?" button (fallback).** For a new phone or cleared browser. They enter first name and last name (separate fields) to find their RSVP. Picking from a list is an option, see open question 4.
 
-Proposed: **A plus B**. Browser token by default, and also show the private edit link on the confirmation screen as a backup. Host can edit anything. The change log covers abuse, which fits the "just some logging" idea.
+**Duplicates are expected and handled by the host, not prevented.** An uncle may RSVP separately from his wife. That is fine. The host can merge them (see Host view).
+
+## Merging RSVPs (host only)
+
+Real case: Aunt and Uncle both RSVP, both say a party of 6, both claim a dish.
+
+- Host picks two or more RSVPs and merges them into one.
+- Host sets the final name (for example, "Aunt Sue and Uncle Bob") and the final head count. It is **not** added automatically, because the 6 and 6 above is the same 6 people. Default to the largest number and let the host edit.
+- All dishes claimed by either RSVP move to the merged RSVP. Notes are combined.
+- If both claimed the same item and only one is needed, the host sees the conflict and picks.
+- **Browser memory keeps working after a merge.** Every browser that remembered either old RSVP now lands on the merged one. So Aunt's phone and Uncle's phone both say "Welcome back" and show the same RSVP. Either of them can edit it. The "Already RSVPed?" lookup also finds the merged RSVP by any of the original names.
+- The merge is recorded in the change log, with enough detail to understand what was combined.
+- Undo: nice to have. At minimum the log holds the before state so the host can recreate it by hand.
 
 ## Host access
 
@@ -87,7 +98,8 @@ Proposed: **A plus B**. Browser token by default, and also show the private edit
 ## Data model (rough, for scoping only)
 
 - **Event**: title, date, time, location, notes, host passphrase hash
-- **Guest/RSVP**: id, name, status (yes/no), party size, note, edit token, timestamps
+- **Guest/RSVP**: id, first name, last name, status (yes/no), party size, note, timestamps, merged into (optional)
+- **Browser link**: browser token to RSVP id. A merge repoints all tokens from the old RSVPs to the merged one.
 - **BringItem**: id, label, quantity needed, created by (host or guest), sort order
 - **Claim**: item id, RSVP id, quantity
 - **ChangeLog**: id, timestamp, actor (guest name or host), action, entity, before, after
@@ -97,7 +109,7 @@ Proposed: **A plus B**. Browser token by default, and also show the private edit
 1. **Who counts as "RSVPed"?** Does a "No" RSVP unlock the names on the bring list, or only a "Yes"? My lean: Yes only. Also, is it okay that names on the bring list reveal who is coming to other guests who have RSVPed? My lean: yes, that is the potluck norm.
 2. **Head count detail**: Just a number, or do you want adults and kids separately (useful for portions and seating)?
 3. **Dietary info**: Free-text note is enough, or a dedicated "allergies/dietary" field?
-4. **Edit identity**: Are you happy with browser token plus private link, or would you prefer something simpler like name match?
+4. **Pick from a list?** You suggested letting guests pick their name from a list in the "Already RSVPed?" flow. A list of everyone who RSVPed would reveal who is coming, which conflicts with the visibility rules. Two ways around it: (a) skip the list and use first plus last name fields, (b) you preload your invite list, and guests pick from the invitees, which does not reveal who has RSVPed. My lean: (a) for v1, (b) later if lookups prove confusing.
 5. **Host access**: Single passphrase okay?
 6. **RSVP deadline**: Should RSVPs lock after a date, or stay open until the day?
 7. **Guest-added items**: Can guests add their own dishes beyond your list, or only pick from yours?
