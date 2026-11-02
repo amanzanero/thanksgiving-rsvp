@@ -1,123 +1,139 @@
 # Thanksgiving RSVP: Scope
 
-Status: draft for discussion. Nothing here is final until the open questions at the bottom are answered.
+Status: scope agreed, ready for design. A few small assumptions are listed at the bottom for a quick confirm.
 
 ## Goal
 
-A tiny website for one Thanksgiving. The host shares one link with family and friends. Guests RSVP for themselves, say how many people are coming, and pick what they will bring. The host can see everything and a log of changes.
+A tiny website for one Thanksgiving. The host shares one link with family and friends. Guests say "I'm coming", say how many people are in their party, and pick what they will bring. The host can see everything, merge duplicates, and review a log of changes.
 
-This is personal use, one event, low traffic (probably under 50 people). Simple beats clever.
+Personal use, one event, low traffic (probably under 50 people). Simple beats clever. The audience is not tech savvy, so every flow must be obvious.
+
+## How to think about it
+
+- **The website is the invite.** There is no invite list and no "invited" state.
+- **RSVPing means "I'm coming".** Someone who has not RSVPed is simply not on the list.
+- **"Not coming" means not on the list.** A guest who RSVPed and later can't make it taps "I can't make it anymore". Their spot and dishes are released, and the host can still see in the log that it happened.
+- The word "RSVP" in the UI should read plainly, for example "I'm coming" and "I can't make it anymore".
 
 ## Who uses it
 
-- **Guest**: opens the shared link on a phone, RSVPs, can come back later to change it.
-- **Host (you)**: sets up the event and the "please bring" list, and wants an audit trail.
+- **Guest**: opens the shared link on a phone, says they're coming, can come back later to change or cancel.
+- **Host (you)**: sets up the event and the bring list, watches who is coming, merges duplicates, closes sign-ups.
 
 ## Core features (v1)
 
-### 1. RSVP
-- Guest enters their name, picks Yes or No, and a head count (including themselves).
-- Optional note (allergies, "running late", etc.).
-- Dishes they bring are chosen from the list (see 2), or they can add their own.
+### 1. Signing up
+- Guest enters first name and last name, and a party size (total people, including themselves).
+- Guest picks dishes from the bring list, adds their own, or brings nothing.
+- No notes or dietary field. Keep the form short.
 
 ### 2. Bring list (public)
 - Host predefines items, for example: turkey, mashed potatoes, rolls, pumpkin pie, drinks, ice.
-- Everyone sees every item as **Taken** or **Still needed**, and who took it is shown on the item.
-- A guest can claim an item, release it, or add a custom item ("Grandma's green bean casserole").
+- Everyone sees each item as **Taken** or **Still needed**.
+- A guest can claim an item, release it, or add their own dish ("Grandma's green bean casserole").
 - Optional per item: how many are needed (for example, 2 pies).
 
 ### 3. Visibility rules (decided)
 - **Bring list is public.** Anyone with the link sees each item as **Taken** or **Still needed**.
-- **Names are hidden until you RSVP.** A visitor who has not RSVPed sees only "Taken", never who took it.
-- **After you RSVP, you see who is bringing what.** (Assumption: this applies once you have RSVPed with Yes. See open question 1.)
-- **Only the host sees the full guest list**, head counts, and notes. A guest sees their own RSVP and the names on the bring list, nothing more.
+- **Names are hidden until you're signed up.** A visitor who has not signed up sees only "Taken", never who took it.
+- **Once you're signed up as coming, you see who is bringing what.** Someone who has not signed up, or who has cancelled, goes back to seeing only "Taken".
+- **Only the host sees the full guest list** and party sizes. A guest sees their own entry plus the names on the bring list.
+- This is enforced on the server. Hidden names must never be sent to the browser, only hidden by the UI.
 
 ### 4. Come back and edit
-- A guest can return and change or cancel their RSVP ("not coming anymore").
-- No accounts and no passwords. See "Identity" below.
-- Guest-facing names are first name plus last name.
+- A guest can return and change their party size or dishes, or cancel.
+- No accounts, passwords, PINs, or links to save. See "Identity".
 
 ### 5. Change log
-- Every create, edit, cancel, claim, and release is recorded with a timestamp, who, and before/after values.
+- Every sign up, edit, cancel, claim, release, merge, and host change is recorded with a timestamp, who, and before/after values.
 - Host can view the log on a simple page.
 
 ### 6. Host view
-- Totals: confirmed, declined, total head count.
-- Full guest list with notes.
-- Merge RSVPs (see "Merging RSVPs").
-- Bring list status.
+- Totals: people coming, total head count.
+- Full guest list.
+- Merge duplicate entries (see "Merging").
+- Bring list status, and edit or add items.
+- Edit event details: title, date, time, address.
+- **Open / close sign-ups** with one manual switch (see "Closing sign-ups").
 - Change log.
-- Edit the bring list and event details (date, time, address).
 
-## Identity (decided): no accounts, honor system
+## Identity: no accounts, honor system
 
-The audience is not tech savvy, so there is no login, password, PIN, or link to save. The goal is to stop accidents, not to stop determined people. We are **not** solving for someone RSVPing as another person. The change log is the safety net.
+Goal is to prevent accidents, not determined people. We are **not** solving for someone signing up as another person. The change log is the safety net.
 
-**How a guest gets back to their RSVP:**
-1. **Browser memory (automatic).** After RSVPing, the browser remembers which RSVP is theirs. Next visit: "Welcome back, Sue. Want to change your RSVP?" They do nothing to set this up.
-2. **"Already RSVPed?" button (fallback).** For a new phone or cleared browser. They enter first name and last name (separate fields) to find their RSVP. Picking from a list is an option, see open question 4.
+**How a guest gets back to their entry:**
+1. **Browser memory (automatic).** After signing up, the browser remembers which entry is theirs. Next visit: "Welcome back, Sue. Want to change anything?" They do nothing to set this up.
+2. **"Already signed up?" button (fallback).** For a new phone or cleared browser. They type first name and last name to find their entry. It returns only an exact match for the typed name and never shows a list of names.
 
-**Duplicates are expected and handled by the host, not prevented.** An uncle may RSVP separately from his wife. That is fine. The host can merge them (see Host view).
+Duplicates are expected (an uncle signs up separately from his wife). They are handled by the host merge, not prevented.
 
-## Merging RSVPs (host only)
+## Merging (host only)
 
-Real case: Aunt and Uncle both RSVP, both say a party of 6, both claim a dish.
+Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish.
 
-- Host picks two or more RSVPs and merges them into one.
-- Host sets the final name (for example, "Aunt Sue and Uncle Bob") and the final head count. It is **not** added automatically, because the 6 and 6 above is the same 6 people. Default to the largest number and let the host edit.
-- All dishes claimed by either RSVP move to the merged RSVP. Notes are combined.
+- Host picks two or more entries and merges them into one.
+- Host sets the final display name (for example, "Sue and Bob Smith") and the final party size. Sizes are **not** added automatically, because the 6 and 6 above is the same 6 people. Default to the largest number and let the host edit.
+- Dishes claimed by either entry move to the merged entry.
 - If both claimed the same item and only one is needed, the host sees the conflict and picks.
-- **Browser memory keeps working after a merge.** Every browser that remembered either old RSVP now lands on the merged one. So Aunt's phone and Uncle's phone both say "Welcome back" and show the same RSVP. Either of them can edit it. The "Already RSVPed?" lookup also finds the merged RSVP by any of the original names.
-- The merge is recorded in the change log, with enough detail to understand what was combined.
-- Undo: nice to have. At minimum the log holds the before state so the host can recreate it by hand.
+- **Browser memory keeps working after a merge.** Every browser that remembered either old entry now lands on the merged one, so both phones say "Welcome back" and show the same entry. The name lookup finds the merged entry by any of the original names.
+- The merge is written to the change log with enough detail to rebuild the before state by hand. A one-click undo is a nice to have, not required.
+
+## Closing sign-ups
+
+- A single host switch: sign-ups open or closed. No automatic deadline.
+- When closed, the page shows a friendly "Sign-ups are closed. Contact [host]." for new visitors.
+- Assumption: people already signed up can still edit or cancel after close. See assumptions below.
 
 ## Host access
 
-- Host view lives at a secret URL or behind a single shared passphrase set via environment variable. No user accounts.
-- Proposed: one passphrase. Simple and not guessable like a plain hidden URL.
+- One shared passphrase set as an environment variable. Entering it sets a session cookie. No user accounts.
 
 ## Out of scope for v1
 
 - Accounts, logins, roles
-- Sending emails or texts (reminders, confirmations)
+- Invite lists
+- Adult/kid split, dietary fields, free-text notes
+- Sending emails or texts
 - Multiple events
 - Payments or cost splitting
 - Seating charts
 - Comments or chat between guests
-- Calendar invites (maybe later, cheap to add as an .ics download)
+- Calendar invites (maybe later, cheap as an .ics download)
 
 ## Non-functional
 
 - Mobile first. Most guests will open this from a text message.
-- Loads fast, works without JavaScript heavy lifting where possible.
-- Cheap or free to host.
-- Data is small. Needs a real persistent store, but nothing big.
-- Basic spam protection is enough (rate limit, maybe a honeypot field). Link is unlisted.
-- Privacy: do not index (`noindex`), do not collect more than name, head count, note.
+- Large tap targets, plain language, very few fields.
+- Free to host (see tech direction).
+- Basic spam protection (rate limit, honeypot field). Link is unlisted and sends `noindex`.
+- Collect only first name, last name, and party size.
 
-## Data model (rough, for scoping only)
+## Tech direction (initial, to confirm in design)
 
-- **Event**: title, date, time, location, notes, host passphrase hash
-- **Guest/RSVP**: id, first name, last name, status (yes/no), party size, note, timestamps, merged into (optional)
-- **Browser link**: browser token to RSVP id. A merge repoints all tokens from the old RSVPs to the merged one.
-- **BringItem**: id, label, quantity needed, created by (host or guest), sort order
-- **Claim**: item id, RSVP id, quantity
-- **ChangeLog**: id, timestamp, actor (guest name or host), action, entity, before, after
+- **Next.js on Vercel**, free tier.
+- **Supabase (Postgres)**, free tier, used as a plain database.
+- Design notes to carry into the design phase:
+  - The browser should never talk to the database directly. All reads and writes go through Next.js server code, so the visibility rules and the passphrase check live in one place. Supabase Auth is not used. Database access is locked down so only the server can reach it.
+  - Browser memory is a random token stored in a cookie or local storage, mapped server-side to an entry. Merges repoint tokens to the merged entry.
+  - Supabase free projects pause after about a week of inactivity. That is fine for a busy event week, but check the project is awake before sending out the link, and don't leave it for long stretches.
 
-## Open questions
+## Data model (rough)
 
-1. **Who counts as "RSVPed"?** Does a "No" RSVP unlock the names on the bring list, or only a "Yes"? My lean: Yes only. Also, is it okay that names on the bring list reveal who is coming to other guests who have RSVPed? My lean: yes, that is the potluck norm.
-2. **Head count detail**: Just a number, or do you want adults and kids separately (useful for portions and seating)?
-3. **Dietary info**: Free-text note is enough, or a dedicated "allergies/dietary" field?
-4. **Pick from a list?** You suggested letting guests pick their name from a list in the "Already RSVPed?" flow. A list of everyone who RSVPed would reveal who is coming, which conflicts with the visibility rules. Two ways around it: (a) skip the list and use first plus last name fields, (b) you preload your invite list, and guests pick from the invitees, which does not reveal who has RSVPed. My lean: (a) for v1, (b) later if lookups prove confusing.
-5. **Host access**: Single passphrase okay?
-6. **RSVP deadline**: Should RSVPs lock after a date, or stay open until the day?
-7. **Guest-added items**: Can guests add their own dishes beyond your list, or only pick from yours?
-8. **Hosting and stack preferences**: Any preference or constraints (for example, Vercel plus a small database, Cloudflare, or something you already use)? I would decide this in the design phase, but tell me now if you have a strong opinion.
-9. **Event details**: Date, time, address, and any other info to show at the top of the page?
+- **Event**: title, date, time, address, signups open (boolean), host passphrase (env var, not stored)
+- **Entry**: id, first name, last name, party size, status (coming / cancelled), timestamps, merged into (optional)
+- **Browser link**: token to entry id. A merge repoints tokens.
+- **Item**: id, label, quantity needed, added by (host or guest), sort order
+- **Claim**: item id, entry id, quantity
+- **Change log**: id, timestamp, actor (guest name or host), action, target, before, after
+
+## Assumptions to confirm
+
+1. A first-time visitor has no "I'm not coming" button. They just don't sign up. Only people who signed up can cancel. (If you want to see explicit declines, say so.)
+2. After sign-ups close, existing guests can still edit or cancel, but no new entries are allowed.
+3. Free-text notes are dropped entirely, not just the dietary field.
+4. Name lookup uses separate first name and last name fields, no pick-from-list, so we don't leak who is coming.
 
 ## Next steps
 
-1. You answer the open questions, or tell me to go with my leans.
-2. I update this doc to a final scope.
-3. Move on to design: screens and flows, then data model and stack.
+1. You confirm or tweak the assumptions above.
+2. Design phase: screens and flows (guest sign up, return visit, lookup, host dashboard, merge), then data model details and project setup.
