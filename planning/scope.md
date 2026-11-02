@@ -26,9 +26,11 @@ This is personal use, one event, low traffic (probably under 50 people). Simple 
 - A guest can claim an item, release it, or add a custom item ("Grandma's green bean casserole").
 - Optional per item: how many are needed (for example, 2 pies).
 
-### 3. Guest list visibility (private-ish)
-- Rule from you: only the host sees who is coming overall. A guest sees only their **own** RSVP.
-- The bring list is the one public thing. Seeing "taken by Sam" on an item is a deliberate exception. See open question 1.
+### 3. Visibility rules (decided)
+- **Bring list is public.** Anyone with the link sees each item as **Taken** or **Still needed**.
+- **Names are hidden until you RSVP.** A visitor who has not RSVPed sees only "Taken", never who took it.
+- **After you RSVP, you see who is bringing what.** (Assumption: this applies once you have RSVPed with Yes. See open question 1.)
+- **Only the host sees the full guest list**, head counts, and notes. A guest sees their own RSVP and the names on the bring list, nothing more.
 
 ### 4. Come back and edit
 - A guest can return and change or cancel their RSVP ("not coming anymore").
@@ -92,7 +94,7 @@ Proposed: **A plus B**. Browser token by default, and also show the private edit
 
 ## Open questions
 
-1. **Public vs private**: You said the bring list is public (what is taken and by whom), but only you see who is coming. Is it okay that "Sam is bringing rolls" reveals Sam is coming? Or should it show only "Taken" with no name for other guests? My lean: show names, since that is how a potluck sign-up usually works and it helps people coordinate.
+1. **Who counts as "RSVPed"?** Does a "No" RSVP unlock the names on the bring list, or only a "Yes"? My lean: Yes only. Also, is it okay that names on the bring list reveal who is coming to other guests who have RSVPed? My lean: yes, that is the potluck norm.
 2. **Head count detail**: Just a number, or do you want adults and kids separately (useful for portions and seating)?
 3. **Dietary info**: Free-text note is enough, or a dedicated "allergies/dietary" field?
 4. **Edit identity**: Are you happy with browser token plus private link, or would you prefer something simpler like name match?
