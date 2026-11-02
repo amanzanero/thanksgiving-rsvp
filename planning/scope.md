@@ -1,6 +1,6 @@
 # Thanksgiving RSVP: Scope
 
-Status: scope agreed, ready for design. A few small assumptions are listed at the bottom for a quick confirm.
+Status: scope agreed. Design is paused while we settle the stack.
 
 ## Goal
 
@@ -18,7 +18,7 @@ Personal use, one event, low traffic (probably under 50 people). Simple beats cl
 ## Who uses it
 
 - **Guest**: opens the shared link on a phone, says they're coming, can come back later to change or cancel.
-- **Host (you)**: sets up the event and the bring list, watches who is coming, merges duplicates, closes sign-ups.
+- **Host (you)**: sets up the event and the bring list, watches who is coming, merges duplicates.
 
 ## Core features (v1)
 
@@ -54,7 +54,6 @@ Personal use, one event, low traffic (probably under 50 people). Simple beats cl
 - Merge duplicate entries (see "Merging").
 - Bring list status, and edit or add items.
 - Edit event details: title, date, time, address.
-- **Open / close sign-ups** with one manual switch (see "Closing sign-ups").
 - Change log.
 
 ## Identity: no accounts, honor system
@@ -63,7 +62,7 @@ Goal is to prevent accidents, not determined people. We are **not** solving for 
 
 **How a guest gets back to their entry:**
 1. **Browser memory (automatic).** After signing up, the browser remembers which entry is theirs. Next visit: "Welcome back, Sue. Want to change anything?" They do nothing to set this up.
-2. **"Already signed up?" button (fallback).** For a new phone or cleared browser. They type first name and last name to find their entry. It returns only an exact match for the typed name and never shows a list of names.
+2. **"Already signed up?" button (fallback).** For a new phone or cleared browser. They type first name and last name to find their entry. Matching is case insensitive (and ignores extra spaces). It returns only an exact match for the typed name and never shows a list of names.
 
 Duplicates are expected (an uncle signs up separately from his wife). They are handled by the host merge, not prevented.
 
@@ -77,12 +76,6 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 - If both claimed the same item and only one is needed, the host sees the conflict and picks.
 - **Browser memory keeps working after a merge.** Every browser that remembered either old entry now lands on the merged one, so both phones say "Welcome back" and show the same entry. The name lookup finds the merged entry by any of the original names.
 - The merge is written to the change log with enough detail to rebuild the before state by hand. A one-click undo is a nice to have, not required.
-
-## Closing sign-ups
-
-- A single host switch: sign-ups open or closed. No automatic deadline.
-- When closed, the page shows a friendly "Sign-ups are closed. Contact [host]." for new visitors.
-- Assumption: people already signed up can still edit or cancel after close. See assumptions below.
 
 ## Host access
 
@@ -98,6 +91,7 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 - Payments or cost splitting
 - Seating charts
 - Comments or chat between guests
+- Closing sign-ups or RSVP deadlines (no open/close switch; the link just stays open)
 - Calendar invites (maybe later, cheap as an .ics download)
 
 ## Non-functional
@@ -119,21 +113,21 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 
 ## Data model (rough)
 
-- **Event**: title, date, time, address, signups open (boolean), host passphrase (env var, not stored)
+- **Event**: title, date, time, address, host passphrase (env var, not stored)
 - **Entry**: id, first name, last name, party size, status (coming / cancelled), timestamps, merged into (optional)
 - **Browser link**: token to entry id. A merge repoints tokens.
 - **Item**: id, label, quantity needed, added by (host or guest), sort order
 - **Claim**: item id, entry id, quantity
 - **Change log**: id, timestamp, actor (guest name or host), action, target, before, after
 
-## Assumptions to confirm
+## Decisions on earlier assumptions
 
-1. A first-time visitor has no "I'm not coming" button. They just don't sign up. Only people who signed up can cancel. (If you want to see explicit declines, say so.)
-2. After sign-ups close, existing guests can still edit or cancel, but no new entries are allowed.
-3. Free-text notes are dropped entirely, not just the dietary field.
-4. Name lookup uses separate first name and last name fields, no pick-from-list, so we don't leak who is coming.
+- No explicit "not coming" for first-time visitors. They just don't sign up.
+- No free-text notes at all.
+- Name lookup is first plus last name, case insensitive, with no pick-from-list.
+- No closing of sign-ups.
 
 ## Next steps
 
-1. You confirm or tweak the assumptions above.
-2. Design phase: screens and flows (guest sign up, return visit, lookup, host dashboard, merge), then data model details and project setup.
+1. Settle the stack (in progress, see tech direction).
+2. Then design: screens and flows (guest sign up, return visit, lookup, host dashboard, merge), then data model details and project setup.
