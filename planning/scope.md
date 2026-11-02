@@ -102,14 +102,16 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 - Basic spam protection (rate limit, honeypot field). Link is unlisted and sends `noindex`.
 - Collect only first name, last name, and party size.
 
-## Tech direction (initial, to confirm in design)
+## Tech direction (decided)
 
-- **Next.js on Vercel**, free tier.
-- **Supabase (Postgres)**, free tier, used as a plain database.
+- **Next.js, hosted on Railway.** Deploys from the GitHub repo.
+- **Postgres, also on Railway**, in the same project as the app. One place, one dashboard. The app gets its connection string from a Railway variable. No Supabase and no Vercel.
 - Design notes to carry into the design phase:
-  - The browser should never talk to the database directly. All reads and writes go through Next.js server code, so the visibility rules and the passphrase check live in one place. Supabase Auth is not used. Database access is locked down so only the server can reach it.
-  - Browser memory is a random token stored in a cookie or local storage, mapped server-side to an entry. Merges repoint tokens to the merged entry.
-  - Supabase free projects pause after about a week of inactivity. That is fine for a busy event week, but check the project is awake before sending out the link, and don't leave it for long stretches.
+  - The browser never talks to the database directly. All reads and writes go through Next.js server code, so the visibility rules live in one place. Hidden names are never sent to the browser.
+  - Browser memory is a random token stored in a cookie, mapped server-side to an entry. Merges repoint tokens to the merged entry.
+  - Host passphrase is a Railway environment variable. Entering it sets a signed session cookie.
+  - Data access library (for example Drizzle or Prisma) and migrations: decide in design.
+  - The database is private to the Railway project. Only the app connects to it.
 
 ## Data model (rough)
 
@@ -129,5 +131,4 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 
 ## Next steps
 
-1. Settle the stack (in progress, see tech direction).
-2. Then design: screens and flows (guest sign up, return visit, lookup, host dashboard, merge), then data model details and project setup.
+1. Design: screens and flows (guest sign up, return visit, lookup, host dashboard, merge), then data model details and project setup.
