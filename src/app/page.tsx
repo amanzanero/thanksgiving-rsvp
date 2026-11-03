@@ -71,9 +71,7 @@ function Details({ date, time, address }: { date: string; time: string; address?
     <section className="flex flex-col gap-0.5">
       <p className="text-[22px] font-semibold">{date}</p>
       <p className="text-xl">{time}</p>
-      {address === undefined ? (
-        <p className="text-xl text-muted">The address shows up once you RSVP.</p>
-      ) : (
+      {address !== undefined && (
         <a
           href={directionsUrl(address)}
           target="_blank"
