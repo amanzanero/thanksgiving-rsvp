@@ -20,7 +20,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           <h1 className="font-display text-[38px] leading-[42px] min-[360px]:text-[44px] min-[360px]:leading-[48px]">{ev.title}</h1>
           <p className="text-[21px] leading-7 text-muted">Come hungry, and tell us what you&apos;ll bring.</p>
         </header>
-        <Details date={date} time={time} address={ev.address} />
+        <Details date={date} time={time} />
         <div className="flex flex-col gap-2">
           <ButtonLink href="/join">I&apos;m coming</ButtonLink>
           <TextLink href="/find">Already signed up?</TextLink>
@@ -66,20 +66,24 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   );
 }
 
-function Details({ date, time, address }: { date: string; time: string; address: string }) {
+function Details({ date, time, address }: { date: string; time: string; address?: string }) {
   return (
     <section className="flex flex-col gap-0.5">
       <p className="text-[22px] font-semibold">{date}</p>
       <p className="text-xl">{time}</p>
-      <a
-        href={directionsUrl(address)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="-mx-1 flex min-h-12 flex-col justify-center rounded-lg px-1 text-xl underline underline-offset-4"
-      >
-        {address}
-        <span className="text-[17px] font-semibold text-muted">Tap for directions</span>
-      </a>
+      {address === undefined ? (
+        <p className="text-xl text-muted">The address shows up once you RSVP.</p>
+      ) : (
+        <a
+          href={directionsUrl(address)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="-mx-1 flex min-h-12 flex-col justify-center rounded-lg px-1 text-xl underline underline-offset-4"
+        >
+          {address}
+          <span className="text-[17px] font-semibold text-muted">Tap for directions</span>
+        </a>
+      )}
     </section>
   );
 }
