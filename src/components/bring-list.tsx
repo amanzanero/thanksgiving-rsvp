@@ -23,7 +23,7 @@ export function BringRow({
 }) {
   return (
     <div className="flex items-center gap-3 py-3.5">
-      <div className="flex flex-col">
+      <div className="flex min-w-0 flex-col [overflow-wrap:anywhere]">
         <span className="text-xl font-medium">{label}</span>
         {n && <span className="text-base text-muted">{n}</span>}
       </div>
