@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* Tokens from planning/design.md */
+:root {
+  --tablecloth: #e8e4dc;
+  --sheet: #fbfaf6;
+  --ink: #2b2a26;
+  --muted: #5e5b53;
+  --line: #8c8678;
+  --hairline: #d5cfc2;
+  --action: #2f4f3a;
+  --green: #2f4f3a;
+  --green-tint: #dce7da;
+  --amber: #7a5214;
+  --amber-tint: #f1e4c8;
+}
+
+@theme inline {
+  --color-tablecloth: var(--tablecloth);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-hairline: var(--hairline);
+  --color-action: var(--action);
+  --color-green: var(--green);
+  --color-green-tint: var(--green-tint);
+  --color-amber: var(--amber);
+  --color-amber-tint: var(--amber-tint);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  background: var(--tablecloth);
+  color: var(--ink);
+  font-size: 18px;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  min-height: 100dvh;
+  line-height: 1.4;
+}
+
+:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

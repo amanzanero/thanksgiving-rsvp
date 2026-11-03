@@ -1,6 +1,6 @@
 # Thanksgiving RSVP: Scope
 
-Status: scope agreed. Design is paused while we settle the stack.
+Status: scope agreed. Design done (see `planning/design.md`). Build started.
 
 ## Goal
 
@@ -129,6 +129,27 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 - Name lookup is first plus last name, case insensitive, with no pick-from-list.
 - No closing of sign-ups.
 
+## Event details (decided)
+
+- Title: "Thanksgiving at Andrew and Isabella's"
+- Date: Thursday, November 26, 2026
+- Time: 5:00 pm
+- Address: 123 Example St, Anytown, CA 90000
+- Hosts: Andrew and Isabella Manzanero
+
+## Decisions made during design
+
+- Data access: Drizzle (lighter than Prisma, fits a small schema).
+- Host list shows names for every dish. Guests who have not signed up only see Taken.
+- Two guests cannot both hold the last unit of an item. The second sees Taken and picks something else. Merging two entries that claimed the same single item shows a conflict for the host to resolve.
+- Browser memory cookie lasts until the day after Thanksgiving.
+- Merge undo is not in v1. The change log has enough detail to rebuild by hand.
+- Wrong passphrase, empty guest list, validation and rate-limit messages are designed (see `planning/design.md`).
+
 ## Next steps
 
-1. Design: screens and flows (guest sign up, return visit, lookup, host dashboard, merge), then data model details and project setup.
+1. Scaffold Next.js, tokens and fonts from the design.
+2. Schema and migrations (Drizzle, Postgres on Railway).
+3. Guest flow: landing, sign up, dishes, return visit, lookup, cancel.
+4. Host flow: passphrase gate, guests, merge, bring list, log, event.
+5. Spam protection, noindex, deploy to Railway.
