@@ -4,6 +4,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import net from "node:net";
+import path from "node:path";
 
 const PORT = 5433;
 
@@ -22,9 +23,11 @@ if (!existsSync(".env.local")) {
 }
 
 mkdirSync(".pglite", { recursive: true });
+// Run the real entry points with this Node, not through npx, so stopping them actually stops them.
+const bin = (p) => path.resolve("node_modules", p);
 const db = spawn(
-  "npx",
-  ["pglite-server", "--db=.pglite/data", `--port=${PORT}`, "--host=127.0.0.1", "--max-connections=10"],
+  process.execPath,
+  [bin("@electric-sql/pglite-socket/dist/scripts/server.js"), "--db=.pglite/data", `--port=${PORT}`, "--host=127.0.0.1", "--max-connections=10"],
   { stdio: "inherit" },
 );
 
@@ -48,14 +51,21 @@ for (const script of ["scripts/migrate.mjs", "scripts/seed.mjs"]) {
   }
 }
 
-const web = spawn("npx", ["next", "dev", ...process.argv.slice(2)], { stdio: "inherit" });
-const stop = () => {
-  web.kill();
-  db.kill();
-};
-process.on("SIGINT", stop);
-process.on("SIGTERM", stop);
-web.on("exit", (code) => {
-  db.kill();
-  process.exit(code ?? 0);
-});
+const web = spawn(process.execPath, [bin("next/dist/bin/next"), "dev", ...process.argv.slice(2)], { stdio: "inherit" });
+
+const exited = (child) =>
+  new Promise((resolve) => (child.exitCode !== null || child.signalCode !== null ? resolve() : child.once("exit", resolve)));
+
+let stopping = false;
+async function stop(code = 0) {
+  if (stopping) return;
+  stopping = true;
+  web.kill("SIGTERM");
+  db.kill("SIGTERM");
+  await Promise.all([exited(web), exited(db)]);
+  process.exit(code);
+}
+process.on("SIGINT", () => stop(0));
+process.on("SIGTERM", () => stop(0));
+web.on("exit", (code) => stop(code ?? 0));
+db.on("exit", (code) => stop(code ?? 1));
