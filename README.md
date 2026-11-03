@@ -15,7 +15,15 @@ Guests use http://localhost:3000. The host view is http://localhost:3000/host.
 
 ## Deploy
 
-Railway deploys `main` automatically. Before each deploy it runs `scripts/migrate.mjs` and `scripts/seed.mjs` (see `railway.json`), then checks `/api/health`. The app needs three variables: `DATABASE_URL` (a reference to the Postgres service), `SESSION_SECRET`, and `HOST_PASSPHRASE`.
+Railway deploys `main` automatically (project `peaceful-celebration`, service `thanksgiving-rsvp`, Postgres in the same project).
+
+Deploy settings live on the Railway service, not in the repo. This service is new, and Railway no longer reads `railway.json` for new services. On the service:
+
+- **Pre-deploy command:** `node scripts/migrate.mjs && node scripts/seed.mjs`. It runs in its own container before each deploy. Migrations are safe to repeat, and the seed does nothing once an event exists.
+- **Health check path:** `/api/health`
+- **Variables:** `DATABASE_URL` (reference to the Postgres service), `SESSION_SECRET`, `HOST_PASSPHRASE`.
+
+A **redeploy reuses the previous deployment's settings**. To apply a changed setting, push a commit or change a variable so Railway starts a fresh deployment.
 
 ## Tests
 

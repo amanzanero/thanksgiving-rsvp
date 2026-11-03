@@ -40,4 +40,9 @@ npm run build
 
 ## Deploy
 
-Railway project `peaceful-celebration`, service `thanksgiving-rsvp`, deploys from `main`. Postgres is a Railway service in the same project. Variables on the app: `DATABASE_URL` (reference to Postgres), `SESSION_SECRET`, `HOST_PASSPHRASE`.
+Railway project `peaceful-celebration`, service `thanksgiving-rsvp`, deploys from `main`. Postgres is a Railway service in the same project.
+
+- Deploy settings (pre-deploy command `node scripts/migrate.mjs && node scripts/seed.mjs`, health check `/api/health`) are set on the Railway service. `railway.json` is not used: Railway does not read it for new services.
+- Variables on the app: `DATABASE_URL` (reference to Postgres), `SESSION_SECRET`, `HOST_PASSPHRASE`.
+- A redeploy reuses the old deployment's settings. To apply a setting change, push a commit or change a variable.
+- Look up Railway behaviour in the Railway docs (`search-docs` and `fetch-docs` on the Railway MCP) before guessing.
