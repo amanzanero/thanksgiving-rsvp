@@ -1,23 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Sheet } from "./ui";
+import { useState, useTransition } from "react";
+import { removeGuestAction } from "@/app/host/actions";
+import { Button, ErrorBox, Sheet, TextButton } from "./ui";
 
 type Guest = { id: string; name: string; partySize: number; dishes: string[] };
 
 export function GuestTable({ guests, selectable = true, highlight = [] }: { guests: Guest[]; selectable?: boolean; highlight?: string[] }) {
   const [picked, setPicked] = useState<string[]>([]);
+  const [confirming, setConfirming] = useState(false);
+  const [error, setError] = useState<string>();
+  const [pending, start] = useTransition();
   const toggle = (id: string) => setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
   const on = (id: string) => (selectable ? picked.includes(id) : highlight.includes(id));
+  const only = selectable && picked.length === 1 ? guests.find((g) => g.id === picked[0]) : undefined;
+  const remove = () => {
+    if (!only) return;
+    setError(undefined);
+    start(async () => {
+      const res = await removeGuestAction({ id: only.id });
+      if (res?.error) {
+        setError(res.error);
+        setConfirming(false);
+      }
+    });
+  };
 
   return (
     <div className="flex flex-col gap-6">
       {selectable && (
         <p className="text-[19px] text-muted">
-          {picked.length < 2 ? "Select two or more entries to merge duplicates." : `${picked.length} selected.`}
+          {picked.length < 2 ? "Select two or more entries to merge duplicates, or one to remove." : `${picked.length} selected.`}
         </p>
       )}
+      {error && <ErrorBox>{error}</ErrorBox>}
       <Sheet className="@container p-2 md:p-4">
         <div className="hidden items-center gap-4 px-4 pb-2 text-base font-semibold text-muted @min-[560px]:flex">
           <span className="w-7" />
@@ -31,7 +48,7 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
             <li key={g.id}>
               <label className={`flex items-center gap-4 rounded-xl px-3 py-3.5 @min-[560px]:px-4 ${selectable ? "cursor-pointer" : ""} ${on(g.id) ? "bg-green-tint" : ""}`}>
                 {selectable ? (
-                  <input type="checkbox" className="peer sr-only" checked={picked.includes(g.id)} onChange={() => toggle(g.id)} />
+                  <input type="checkbox" className="peer sr-only" checked={picked.includes(g.id)} onChange={() => { setConfirming(false); toggle(g.id); }} />
                 ) : (
                   <span className="sr-only">{on(g.id) ? "Selected" : ""}</span>
                 )}
@@ -55,6 +72,26 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
           ))}
         </ul>
       </Sheet>
+      {only && !confirming && (
+        <TextButton tone="amber" className="w-fit" onClick={() => setConfirming(true)}>
+          Remove {only.name}
+        </TextButton>
+      )}
+      {only && confirming && (
+        <div role="alertdialog" aria-label={`Remove ${only.name}`} className="flex flex-col gap-4 rounded-2xl bg-amber-tint p-4">
+          <p className="text-[19px] leading-[26px] font-medium">
+            Remove {only.name}? Their spot ({only.partySize} {only.partySize === 1 ? "person" : "people"}) and dishes will be released. They can sign up again if they want.
+          </p>
+          <div className="flex flex-col gap-2 md:flex-row">
+            <Button onClick={remove} disabled={pending} className="md:w-fit md:px-10">
+              {pending ? "Removing…" : "Yes, remove"}
+            </Button>
+            <Button variant="secondary" onClick={() => setConfirming(false)} disabled={pending} className="md:w-fit md:px-10">
+              Keep
+            </Button>
+          </div>
+        </div>
+      )}
       {selectable && picked.length >= 2 && (
         <Link
           href={`/host/merge?ids=${picked.join(",")}`}

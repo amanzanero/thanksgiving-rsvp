@@ -10,6 +10,7 @@ export default async function Guests({ searchParams }: PageProps<"/host">) {
   const sp = await searchParams;
   const { guests, totals } = await listGuests(db());
   const merged = typeof sp.merged === "string" ? sp.merged : null;
+  const removed = typeof sp.removed === "string" ? sp.removed : null;
   return (
     <>
       <Title className="hidden md:block md:text-[42px] md:leading-[46px]">Guests</Title>
@@ -20,6 +21,11 @@ export default async function Guests({ searchParams }: PageProps<"/host">) {
             <path d="m7 12.5 3.5 3.5 6.5-7.5" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Merged. {merged} are now one entry.
+        </div>
+      )}
+      {removed && (
+        <div role="status" className="rounded-[14px] bg-green-tint p-3.5 pl-4 text-[19px] font-semibold text-green">
+          Removed {removed}. Their spot and dishes are released.
         </div>
       )}
       <div className="flex gap-4">

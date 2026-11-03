@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import * as schema from "@/db/schema";
-import { GuestError, type Db } from "./guest";
+import { GuestError, setClaims, type Db } from "./guest";
 
 const { event, entry, entryName, browserLink, item, claim, changeLog } = schema;
 type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
@@ -37,6 +37,38 @@ export async function listGuests(db: Db) {
     dishes: claims.filter((c) => c.entryId === e.id).map((c) => c.label),
   }));
   return { guests, totals: { entries: guests.length, people: guests.reduce((n, g) => n + g.partySize, 0) } };
+}
+
+/**
+ * Host removes a guest. Same effect as the guest cancelling: the spot and every
+ * dish are released and the row stays, so the log still makes sense. The guest
+ * can sign up again later with the same name.
+ */
+export async function removeGuest(db: Db, entryId: string) {
+  if (!UUID.test(entryId)) throw new GuestError("not_found", "That guest isn't on the list anymore.");
+  return db.transaction(async (tx) => {
+    const [e] = await tx
+      .select()
+      .from(entry)
+      .where(and(eq(entry.id, entryId), eq(entry.status, "coming"), isNull(entry.mergedIntoId)))
+      .for("update");
+    if (!e) throw new GuestError("not_found", "That guest isn't on the list anymore.");
+    const released = await tx
+      .select({ label: item.label })
+      .from(claim)
+      .innerJoin(item, eq(claim.itemId, item.id))
+      .where(eq(claim.entryId, e.id));
+    await setClaims(tx, { id: e.id, displayName: HOST }, [], []);
+    await tx.update(entry).set({ status: "cancelled", updatedAt: new Date() }).where(eq(entry.id, e.id));
+    await hostLog(
+      tx,
+      "cancel",
+      e.displayName,
+      { status: "coming", partySize: e.partySize, dishes: released.map((r) => r.label) },
+      { status: "cancelled" },
+    );
+    return e.displayName;
+  });
 }
 
 // ---- Bring list -----------------------------------------------------------
