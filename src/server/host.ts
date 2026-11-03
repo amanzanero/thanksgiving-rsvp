@@ -256,6 +256,8 @@ export async function mergeEntries(
     await tx.update(entryName).set({ entryId: survivor.id }).where(inArray(entryName.entryId, ids));
     await tx.update(browserLink).set({ entryId: survivor.id }).where(inArray(browserLink.entryId, ids));
     const others = ids.filter((i) => i !== survivor.id);
+    // Dishes a guest added themselves now belong to the merged entry, so releasing them still removes them.
+    await tx.update(item).set({ addedByEntryId: survivor.id }).where(inArray(item.addedByEntryId, others));
     await tx.update(entry).set({ mergedIntoId: survivor.id, updatedAt: new Date() }).where(inArray(entry.id, others));
     await tx.update(entry).set({ displayName: name, partySize: input.partySize, updatedAt: new Date() }).where(eq(entry.id, survivor.id));
 

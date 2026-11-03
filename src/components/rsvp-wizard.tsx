@@ -36,6 +36,8 @@ export function RsvpWizard({
   const edit = mode === "edit";
   const pickable = items.filter((i) => i.status === "needed" || ("mine" in i && i.mine));
   const taken = items.filter((i) => !pickable.includes(i));
+  // A dish that was taken while this form was open drops out of the selection.
+  const chosen = selected.filter((id) => pickable.some((p) => p.id === id));
 
   function next() {
     const e: typeof errors = {};
@@ -164,7 +166,7 @@ export function RsvpWizard({
       {errorBox}
       <div className="flex flex-col gap-2.5" role="group" aria-label="Dishes still needed">
         {pickable.map((it) => (
-          <PickRow key={it.id} label={it.label} checked={selected.includes(it.id)} onChange={() => toggle(it.id)} />
+          <PickRow key={it.id} label={it.label} checked={chosen.includes(it.id)} onChange={() => toggle(it.id)} />
         ))}
         {added.map((d, i) => (
           <PickRow key={`${d}-${i}`} label={d} checked onChange={() => setAdded((a) => a.filter((_, j) => j !== i))} />
@@ -192,7 +194,7 @@ export function RsvpWizard({
         I&apos;m not bringing anything
       </TextButton>
       <div className="mt-auto" />
-      <Button type="button" disabled={pending} onClick={() => submit(selected, added)}>
+      <Button type="button" disabled={pending} onClick={() => submit(chosen, added)}>
         {edit ? "Save changes" : "Save my spot"}
       </Button>
     </div>
