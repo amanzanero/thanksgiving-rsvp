@@ -1,6 +1,6 @@
 # Thanksgiving RSVP: Scope
 
-Status: scope agreed. Design done (see `planning/design.md`). Build started.
+Status: v1 built and tested locally. Deployment to Railway is next.
 
 ## Goal
 
