@@ -18,8 +18,8 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
           {picked.length < 2 ? "Select two or more entries to merge duplicates." : `${picked.length} selected.`}
         </p>
       )}
-      <Sheet className="p-2 md:p-4">
-        <div className="hidden items-center gap-4 px-4 pb-2 text-base font-semibold text-muted md:flex">
+      <Sheet className="@container p-2 md:p-4">
+        <div className="hidden items-center gap-4 px-4 pb-2 text-base font-semibold text-muted @min-[560px]:flex">
           <span className="w-7" />
           <span className="flex-1">Name</span>
           <span className="w-[240px]">Dishes</span>
@@ -29,7 +29,7 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
         <ul className="flex flex-col gap-0.5">
           {guests.map((g) => (
             <li key={g.id}>
-              <label className={`flex items-center gap-4 rounded-xl px-3 py-3.5 md:px-4 ${selectable ? "cursor-pointer" : ""} ${on(g.id) ? "bg-green-tint" : ""}`}>
+              <label className={`flex items-center gap-4 rounded-xl px-3 py-3.5 @min-[560px]:px-4 ${selectable ? "cursor-pointer" : ""} ${on(g.id) ? "bg-green-tint" : ""}`}>
                 {selectable ? (
                   <input type="checkbox" className="peer sr-only" checked={picked.includes(g.id)} onChange={() => toggle(g.id)} />
                 ) : (
@@ -45,11 +45,11 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
                     </svg>
                   )}
                 </span>
-                <span className="flex min-w-0 flex-1 flex-col md:flex-row md:items-center md:gap-4">
-                  <span className="flex-1 text-xl font-medium">{g.name}</span>
-                  <span className="text-base text-muted md:w-[240px] md:text-lg">{g.dishes.length ? g.dishes.join(", ") : "No dish yet"}</span>
+                <span className="flex min-w-0 flex-1 flex-col @min-[560px]:flex-row @min-[560px]:items-center @min-[560px]:gap-4">
+                  <span className="min-w-0 flex-1 text-xl font-medium [overflow-wrap:anywhere]">{g.name}</span>
+                  <span className="min-w-0 text-base text-muted [overflow-wrap:anywhere] @min-[560px]:w-[240px] @min-[560px]:text-lg">{g.dishes.length ? g.dishes.join(", ") : "No dish yet"}</span>
                 </span>
-                <span className="font-display text-[26px] md:w-[60px] md:text-right">{g.partySize}</span>
+                <span className="font-display text-[26px] @min-[560px]:w-[60px] @min-[560px]:text-right">{g.partySize}</span>
               </label>
             </li>
           ))}

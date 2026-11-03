@@ -16,7 +16,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
     return (
       <Page>
         <header className="flex flex-col gap-3.5">
-          <h1 className="font-display text-[44px] leading-[48px]">{ev.title}</h1>
+          <h1 className="font-display text-[38px] leading-[42px] min-[360px]:text-[44px] min-[360px]:leading-[48px]">{ev.title}</h1>
           <p className="text-[21px] leading-7 text-muted">Come hungry, and tell us what you&apos;ll bring.</p>
         </header>
         <Details date={date} time={time} address={ev.address} />
