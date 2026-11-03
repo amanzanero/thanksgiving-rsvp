@@ -11,6 +11,7 @@ import {
   listGuests,
   mergeEntries,
   previewMerge,
+  removeGuest,
   removeItem,
   updateEvent,
 } from "./host";
@@ -19,6 +20,34 @@ import { createHostSessionValue, passphraseMatches, verifyHostSessionValue } fro
 let db: Db;
 beforeEach(async () => {
   db = await createTestDb();
+});
+
+describe("remove guest", () => {
+  it("releases the spot and dishes, logs it as the host, and lets them sign up again", async () => {
+    const drinks = await itemId(db, "Drinks");
+    const sue = await signUp(db, { firstName: "Sue", lastName: "Smith", partySize: 3, itemIds: [drinks], newDishes: ["Green bean casserole"] });
+
+    const name = await removeGuest(db, sue.entryId);
+    expect(name).toBe("Sue Smith");
+
+    const { guests, totals } = await listGuests(db);
+    expect(guests).toHaveLength(0);
+    expect(totals).toEqual({ entries: 0, people: 0 });
+    const bring = await hostBringList(db);
+    expect(bring.find((i) => i.label === "Drinks")?.status).toBe("needed");
+    expect(bring.find((i) => i.label === "Green bean casserole")).toBeUndefined();
+
+    const removed = (await getChangeLog(db)).find((r) => r.action === "cancel")!;
+    expect(removed.actor).toBe("Host");
+    expect(describeLog(removed).title).toBe("Host removed Sue Smith");
+    expect(describeLog(removed).detail).toContain("Drinks");
+
+    await expect(removeGuest(db, sue.entryId)).rejects.toMatchObject({ code: "not_found" });
+    await expect(removeGuest(db, "nope")).rejects.toMatchObject({ code: "not_found" });
+
+    await signUp(db, { firstName: "Sue", lastName: "Smith", partySize: 2 });
+    expect((await listGuests(db)).guests).toHaveLength(1);
+  });
 });
 
 describe("merge", () => {
