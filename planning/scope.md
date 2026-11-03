@@ -116,8 +116,9 @@ Real case: Aunt and Uncle both sign up, both say a party of 6, both claim a dish
 ## Data model (rough)
 
 - **Event**: title, date, time, address, host passphrase (env var, not stored)
-- **Entry**: id, first name, last name, party size, status (coming / cancelled), timestamps, merged into (optional)
-- **Browser link**: token to entry id. A merge repoints tokens.
+- **Entry**: id, display name, party size, status (coming / cancelled), timestamps, merged into (optional)
+- **Entry name**: entry id, first name, last name, lookup key (lowercase, trimmed, spaces collapsed, unique). A merged entry has one per original name. The same name cannot sign up twice, so that guest uses "Already signed up?".
+- **Browser link**: hash of the cookie token to entry id, with an expiry. A merge repoints these.
 - **Item**: id, label, quantity needed, added by (host or guest), sort order
 - **Claim**: item id, entry id, quantity
 - **Change log**: id, timestamp, actor (guest name or host), action, target, before, after
