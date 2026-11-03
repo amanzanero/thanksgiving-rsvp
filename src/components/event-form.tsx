@@ -11,7 +11,7 @@ export function EventForm({ values }: { values: { title: string; date: string; t
   return (
     <form action={action} className="flex max-w-[660px] flex-col gap-5 rounded-3xl bg-sheet p-6 md:p-8">
       <Field label="Title" name="title" defaultValue={v.title} required maxLength={120} />
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:max-md:grid-cols-2 lg:grid-cols-2">
         <Field label="Date" name="date" type="date" defaultValue={v.date} required />
         <Field label="Time" name="time" type="time" defaultValue={v.time} required />
       </div>
