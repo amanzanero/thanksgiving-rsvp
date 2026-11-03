@@ -1,6 +1,7 @@
 import { BringList } from "@/components/bring-list";
 import { ButtonLink, Page, TextLink, Title } from "@/components/ui";
 import { formatEvent } from "@/lib/event-format";
+import { directionsUrl } from "@/lib/maps";
 import { getBringList, type SignedInItem } from "@/server/guest";
 import { db, getViewer, requireEvent } from "@/server/context";
 
@@ -70,7 +71,15 @@ function Details({ date, time, address }: { date: string; time: string; address:
     <section className="flex flex-col gap-0.5">
       <p className="text-[22px] font-semibold">{date}</p>
       <p className="text-xl">{time}</p>
-      <p className="text-xl">{address}</p>
+      <a
+        href={directionsUrl(address)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="-mx-1 flex min-h-12 flex-col justify-center rounded-lg px-1 text-xl underline underline-offset-4"
+      >
+        {address}
+        <span className="text-[17px] font-semibold text-muted">Tap for directions</span>
+      </a>
     </section>
   );
 }
