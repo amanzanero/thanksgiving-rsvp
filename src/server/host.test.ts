@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createTestDb, itemId } from "@/test/db";
 import { fromFormParts, toFormParts } from "@/lib/event-format";
 import { describeLog } from "@/lib/log-format";
-import { getBringList, lookupByName, resolveViewer, signUp, type Db } from "./guest";
+import { getBringList, lookupByName, resolveViewer, signUp, updateEntry, type Db } from "./guest";
 import {
   addItem,
   editItem,
@@ -63,6 +63,15 @@ describe("merge", () => {
 
     const merge = (await getChangeLog(db)).find((r) => r.action === "merge")!;
     expect(describeLog(merge).detail).toContain("Linda Park (6) and Ray Park (6) became Linda and Ray Park (6)");
+  });
+
+  it("keeps ownership of a guest-added dish through a merge", async () => {
+    const linda = await signUp(db, { firstName: "Linda", lastName: "Park", partySize: 6 });
+    const ray = await signUp(db, { firstName: "Ray", lastName: "Park", partySize: 6, newDishes: ["Green bean casserole"] });
+    const survivor = await mergeEntries(db, { ids: [linda.entryId, ray.entryId], displayName: "Linda and Ray Park", partySize: 6 });
+    expect((await getBringList(db, null)).map((i) => i.label)).toContain("Green bean casserole");
+    await updateEntry(db, survivor, { itemIds: [] });
+    expect((await getBringList(db, null)).map((i) => i.label)).not.toContain("Green bean casserole");
   });
 
   it("refuses ids that are not real entries", async () => {
