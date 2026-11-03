@@ -11,7 +11,7 @@ export default async function BringListPage() {
   return (
     <>
       <Title className="hidden md:block md:text-[42px] md:leading-[46px]">Bring list</Title>
-      <Sheet className="px-7 py-3.5">
+      <Sheet className="px-5 py-3.5 min-[360px]:px-7">
         {items.length === 0 && <p className="py-4 text-lg text-muted">Nothing on the list yet. Add the first item.</p>}
         {items.map((it, i) => {
           const note = it.claimers.length ? it.claimers.join(" and ") : it.quantityNeeded > 1 ? `${it.claimed} of ${it.quantityNeeded} claimed` : null;

@@ -22,11 +22,11 @@ export default async function Merge({ searchParams }: PageProps<"/host/merge">) 
   return (
     <div className="flex flex-col gap-6">
       <BackLink href="/host" />
-      <div className="flex flex-col gap-7 lg:flex-row lg:items-start">
-        <div className="hidden min-w-0 flex-1 lg:block">
+      <div className="flex flex-col gap-7 xl:flex-row xl:items-start">
+        <div className="hidden min-w-0 flex-1 xl:block">
           <GuestTable guests={guests} selectable={false} highlight={ids} />
         </div>
-        <div className="lg:w-[400px] lg:shrink-0">
+        <div className="xl:w-[400px] xl:shrink-0">
           <MergeForm ids={ids} {...preview} />
         </div>
       </div>

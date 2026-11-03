@@ -27,7 +27,7 @@ export function BringRow({
         <span className="text-xl font-medium">{label}</span>
         {n && <span className="text-base text-muted">{n}</span>}
       </div>
-      <span aria-hidden className="mb-1 h-[22px] min-w-4 flex-1 self-center border-b-2 border-dotted border-line" />
+      <span aria-hidden className="mb-1 h-[22px] min-w-4 flex-1 self-center max-[359px]:min-w-0 max-[359px]:border-transparent border-b-2 border-dotted border-line" />
       {pill}
     </div>
   );
