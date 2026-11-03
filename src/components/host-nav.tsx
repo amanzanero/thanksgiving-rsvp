@@ -52,7 +52,7 @@ export function HostTabs() {
           key={i.href}
           href={i.href}
           aria-current={active(i.href) ? "page" : undefined}
-          className={`flex h-11 flex-1 items-center justify-center rounded-[10px] text-base font-semibold ${active(i.href) ? "bg-sheet text-ink" : "text-muted"}`}
+          className={`flex h-11 flex-auto items-center justify-center rounded-[10px] px-2 text-base font-semibold whitespace-nowrap ${active(i.href) ? "bg-sheet text-ink" : "text-muted"}`}
         >
           {i.label}
         </Link>
