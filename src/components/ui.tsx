@@ -130,7 +130,7 @@ export function Field({
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "name" | "type" | "defaultValue">) {
   const id = `f-${name}`;
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex min-w-0 flex-col gap-2">
       <label htmlFor={id} className="text-[19px] font-semibold">
         {label}
       </label>
@@ -143,7 +143,7 @@ export function Field({
         required={required}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`min-h-16 w-full rounded-[14px] border-2 border-line px-5 py-3 text-[22px] ${error ? "bg-amber-tint" : "bg-sheet"}`}
+        className={`min-h-16 w-full max-w-full min-w-0 appearance-none rounded-[14px] border-2 border-line px-5 py-3 text-left text-[22px] ${error ? "bg-amber-tint" : "bg-sheet"}`}
         {...rest}
       />
       {error && (
