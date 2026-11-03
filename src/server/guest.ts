@@ -195,7 +195,7 @@ export async function lookupByName(db: Db, first: string, last: string): Promise
 // ---- Claims ---------------------------------------------------------------
 
 /** Applies the guest's wanted dishes, enforcing quantities under a row lock. */
-async function setClaims(tx: Tx, e: { id: string; displayName: string }, itemIds: string[], newDishes: string[]) {
+export async function setClaims(tx: Tx, e: { id: string; displayName: string }, itemIds: string[], newDishes: string[]) {
   const wanted = [...new Set(itemIds)];
 
   if (wanted.length) {

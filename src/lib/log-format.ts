@@ -23,7 +23,7 @@ export function describeLog(r: Row): { title: string; detail: string } {
     case "cancel": {
       const dishes = Array.isArray(b.dishes) ? (b.dishes as string[]) : [];
       return {
-        title: `${r.actor} cancelled`,
+        title: r.actor === "Host" ? `Host removed ${r.target}` : `${r.actor} cancelled`,
         detail: dishes.length ? `Spot released. ${dishes.join(", ")} back to Still needed` : "Spot released",
       };
     }

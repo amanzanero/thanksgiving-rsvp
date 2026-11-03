@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { fromFormParts } from "@/lib/event-format";
 import { rateLimit } from "@/lib/rate-limit";
 import { GuestError } from "@/server/guest";
-import { addItem, editItem, mergeEntries, removeItem, updateEvent } from "@/server/host";
+import { addItem, editItem, mergeEntries, removeGuest, removeItem, updateEvent } from "@/server/host";
 import { clientKey, db, isHost } from "@/server/context";
 import { createHostSessionValue, HOST_COOKIE, HOST_SESSION_SECONDS, passphraseMatches } from "@/server/session";
 
@@ -55,6 +55,17 @@ export async function mergeAction(input: {
     return fail(e);
   }
   redirect(`/host?merged=${encodeURIComponent(input.displayName)}`);
+}
+
+export async function removeGuestAction(input: { id: string }): Promise<HostResult> {
+  await requireHost();
+  let name: string;
+  try {
+    name = await removeGuest(db(), String(input.id ?? ""));
+  } catch (e) {
+    return fail(e);
+  }
+  redirect(`/host?removed=${encodeURIComponent(name)}`);
 }
 
 export async function itemAction(_prev: FormState, formData: FormData): Promise<FormState> {
