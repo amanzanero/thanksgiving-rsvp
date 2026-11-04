@@ -4,7 +4,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 type Variant = "primary" | "secondary";
 
 const buttonBase =
-  "flex h-16 w-full items-center justify-center rounded-2xl px-6 text-[22px] font-bold transition-colors disabled:opacity-60";
+  "flex min-h-16 w-full items-center justify-center rounded-2xl px-6 py-3 text-center text-[22px] leading-7 font-bold text-balance transition-colors disabled:opacity-60";
 const buttonVariants: Record<Variant, string> = {
   primary: "bg-action text-sheet hover:bg-[#264030]",
   secondary: "bg-green-tint text-ink hover:bg-[#cfddcc]",
