@@ -54,7 +54,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
           <p className="text-xl text-muted">{mine.length ? `Bringing ${mine.map((m) => m.toLowerCase()).join(", ")}` : "Not bringing a dish yet"}</p>
         </div>
       </div>
-      <ButtonLink href="/change">Change my RSVP</ButtonLink>
+      <ButtonLink href="/change">Change my party or dish</ButtonLink>
       <Details date={date} time={time} address={ev.address} />
       <BringList items={items} hint="You are signed up, so you can see who is bringing what." />
       <TextLink href="/cancel" tone="amber">
