@@ -27,7 +27,7 @@ export function ItemForm({ item, claimers }: { item?: { id: string; label: strin
           <Stepper value={qty} onChange={setQty} labelId="qty-label" />
         </div>
         {edit && claimers && claimers.length > 0 && (
-          <p className="text-lg leading-6 text-muted">{claimers.join(" and ")} claimed this. Removing it releases their claims.</p>
+          <p className="text-lg/6 text-muted">{claimers.join(" and ")} claimed this. Removing it releases their claims.</p>
         )}
         {state.error && <ErrorBox>{state.error}</ErrorBox>}
         <Button type="submit" disabled={pending}>

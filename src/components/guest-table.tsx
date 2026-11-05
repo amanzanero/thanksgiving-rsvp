@@ -63,8 +63,8 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
                   )}
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col @min-[560px]:flex-row @min-[560px]:items-center @min-[560px]:gap-4">
-                  <span className="min-w-0 flex-1 text-xl font-medium [overflow-wrap:anywhere]">{g.name}</span>
-                  <span className="min-w-0 text-base text-muted [overflow-wrap:anywhere] @min-[560px]:w-[240px] @min-[560px]:text-lg">{g.dishes.length ? g.dishes.join(", ") : "No dish yet"}</span>
+                  <span className="min-w-0 flex-1 text-xl font-medium wrap-anywhere">{g.name}</span>
+                  <span className="min-w-0 text-base text-muted wrap-anywhere @min-[560px]:w-[240px] @min-[560px]:text-lg">{g.dishes.length ? g.dishes.join(", ") : "No dish yet"}</span>
                 </span>
                 <span className="font-display text-[26px] @min-[560px]:w-[60px] @min-[560px]:text-right">{g.partySize}</span>
               </label>

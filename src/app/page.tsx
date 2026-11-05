@@ -18,7 +18,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <Page>
         <header className="flex flex-col gap-3.5">
           <h1 className="font-display text-[38px] leading-[42px] min-[360px]:text-[44px] min-[360px]:leading-[48px]">{ev.title}</h1>
-          <p className="text-[21px] leading-7 text-muted">Come hungry, and tell us what you&apos;ll bring.</p>
+          <p className="text-[21px]/7 text-muted">Come hungry, and tell us what you&apos;ll bring.</p>
         </header>
         <Details date={date} time={time} />
         <div className="flex flex-col gap-2">
@@ -48,8 +48,8 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <div className="overflow-hidden rounded-[20px] shadow-[0_8px_20px_rgba(43,42,38,0.14)]">
         <div className="h-[52px] bg-hairline" />
         <div className="h-0.5 bg-line/35" />
-        <div className="flex min-w-0 flex-col gap-1.5 bg-sheet p-6 [overflow-wrap:anywhere]">
-          <p className="font-display text-4xl leading-10">{viewer.displayName}</p>
+        <div className="flex min-w-0 flex-col gap-1.5 bg-sheet p-6 wrap-anywhere">
+          <p className="font-display text-4xl/10">{viewer.displayName}</p>
           <p className="text-[21px] font-semibold">Party of {viewer.partySize}</p>
           <p className="text-xl text-muted">{mine.length ? `Bringing ${mine.map((m) => m.toLowerCase()).join(", ")}` : "Not bringing a dish yet"}</p>
         </div>

@@ -34,7 +34,7 @@ export default async function Guests({ searchParams }: PageProps<"/host">) {
       </div>
       {guests.length === 0 ? (
         <div className="flex flex-col gap-3.5 rounded-3xl bg-sheet p-7">
-          <h2 className="font-display text-[28px] leading-8">Nobody has signed up yet</h2>
+          <h2 className="font-display text-[28px]/8">Nobody has signed up yet</h2>
           <p className="text-xl leading-[27px] text-muted">Send the guest link to family and friends. People show up here as they say they&apos;re coming.</p>
           <div className="md:w-fit">
             <ButtonLink href="/" className="md:px-10">View guest page</ButtonLink>
