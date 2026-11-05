@@ -48,8 +48,8 @@ export function MergeForm({
   return (
     <Sheet className="flex flex-col gap-[18px] p-7">
       <form onSubmit={submit} className="flex flex-col gap-[18px]" noValidate>
-        <h2 className="font-display text-[28px] leading-8">Merge {entries.length} entries</h2>
-        <p className="text-lg leading-6 text-muted">
+        <h2 className="font-display text-[28px]/8">Merge {entries.length} entries</h2>
+        <p className="text-lg/6 text-muted">
           {entries.map((e) => e.name).join(" and ")} become one entry. Both browsers will open the merged entry.
         </p>
         <Field label="Name on the list" name="displayName" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} />
@@ -62,7 +62,7 @@ export function MergeForm({
         </p>
         {conflicts.map((c) => (
           <fieldset key={c.itemId} className="flex flex-col gap-2.5">
-            <legend className="font-display text-[22px] leading-7">
+            <legend className="font-display text-[22px]/7">
               {c.label}: only {c.quantityNeeded} needed
             </legend>
             <p className="text-lg text-muted">Both entries claimed it. Who keeps it?</p>

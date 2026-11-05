@@ -101,7 +101,7 @@ export function RsvpWizard({
           <>
             <Field label="First name" name="firstName" autoComplete="given-name" value={first} onChange={(e) => { setFirst(e.target.value); setErrors((x) => ({ ...x, first: undefined })); }} error={errors.first} maxLength={60} />
             <Field label="Last name" name="lastName" autoComplete="family-name" value={last} onChange={(e) => { setLast(e.target.value); setErrors((x) => ({ ...x, last: undefined })); }} error={errors.last} maxLength={60} />
-            <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden>
+            <div className="absolute left-[-9999px] size-0 overflow-hidden" aria-hidden>
               <input name="website" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
             </div>
           </>

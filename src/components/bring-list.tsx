@@ -23,7 +23,7 @@ export function BringRow({
 }) {
   return (
     <div className="flex items-center gap-3 py-3.5">
-      <div className="flex min-w-0 flex-col [overflow-wrap:anywhere]">
+      <div className="flex min-w-0 flex-col wrap-anywhere">
         <span className="text-xl font-medium">{label}</span>
         {n && <span className="text-base text-muted">{n}</span>}
       </div>
@@ -37,7 +37,7 @@ export function BringList({ items, hint, title = "What to bring" }: { items: Row
   return (
     <Sheet className="px-5 pt-6 pb-2.5">
       <h2 className="font-display text-[30px] leading-[34px]">{title}</h2>
-      <p className="mt-1 mb-3 text-lg leading-6 text-muted">{hint}</p>
+      <p className="mt-1 mb-3 text-lg/6 text-muted">{hint}</p>
       {items.length === 0 && <p className="py-4 text-lg text-muted">Nothing on the list yet.</p>}
       {items.map((it, i) => (
         <div key={it.id}>

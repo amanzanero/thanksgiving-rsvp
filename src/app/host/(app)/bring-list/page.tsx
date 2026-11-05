@@ -25,7 +25,7 @@ export default async function BringListPage() {
           );
         })}
       </Sheet>
-      <p className="text-lg leading-6 text-muted">Names show here because you are the host. Guests who have not signed up only see Taken. Tap an item to edit it.</p>
+      <p className="text-lg/6 text-muted">Names show here because you are the host. Guests who have not signed up only see Taken. Tap an item to edit it.</p>
       <div className="md:w-fit">
         <ButtonLink href="/host/bring-list/new" variant="secondary" className="md:min-w-[220px]">
           Add an item
