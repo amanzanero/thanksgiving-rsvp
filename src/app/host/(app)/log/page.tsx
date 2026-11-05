@@ -9,8 +9,8 @@ export default async function Log() {
   const rows = await getChangeLog(db());
   return (
     <>
-      <Title className="hidden md:block md:text-[42px] md:leading-[46px]">Change log</Title>
-      <Sheet className="px-7 py-2.5 md:max-w-[760px]">
+      <Title className="hidden md:block md:text-[42px]/11.5 ">Change log</Title>
+      <Sheet className="px-7 py-2.5 md:max-w-190">
         {rows.length === 0 && <p className="py-4 text-lg text-muted">Nothing has changed yet.</p>}
         {rows.map((r, i) => {
           const d = describeLog(r);

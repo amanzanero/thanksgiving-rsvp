@@ -8,7 +8,7 @@ export function HostLoginForm() {
   const [state, action, pending] = useActionState<FormState, FormData>(loginAction, {});
   return (
     <form action={action} className="flex flex-col gap-5">
-      <h1 className="font-display text-[38px] leading-[42px]">Host sign in</h1>
+      <h1 className="font-display text-[38px]/10.5 ">Host sign in</h1>
       <Help>Enter the host passphrase to see your guest list.</Help>
       <Field label="Passphrase" name="passphrase" type="password" autoComplete="current-password" required />
       <Honeypot />

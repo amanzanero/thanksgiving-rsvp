@@ -27,7 +27,7 @@ export function BringRow({
         <span className="text-xl font-medium">{label}</span>
         {n && <span className="text-base text-muted">{n}</span>}
       </div>
-      <span aria-hidden className="mb-1 h-[22px] min-w-4 flex-1 self-center max-[359px]:min-w-0 max-[359px]:border-transparent border-b-2 border-dotted border-line" />
+      <span aria-hidden className="mb-1 h-5.5 min-w-4 flex-1 self-center max-[359px]:min-w-0 max-[359px]:border-transparent border-b-2 border-dotted border-line" />
       {pill}
     </div>
   );
@@ -36,7 +36,7 @@ export function BringRow({
 export function BringList({ items, hint, title = "What to bring" }: { items: Row[]; hint: string; title?: string }) {
   return (
     <Sheet className="px-5 pt-6 pb-2.5">
-      <h2 className="font-display text-[30px] leading-[34px]">{title}</h2>
+      <h2 className="font-display text-[30px]/8.5 ">{title}</h2>
       <p className="mt-1 mb-3 text-lg/6 text-muted">{hint}</p>
       {items.length === 0 && <p className="py-4 text-lg text-muted">Nothing on the list yet.</p>}
       {items.map((it, i) => (

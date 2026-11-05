@@ -203,7 +203,7 @@ export function RsvpWizard({
 
 function PickRow({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
-    <label className={`flex min-h-[72px] cursor-pointer items-center gap-4 rounded-2xl p-4 ${checked ? "bg-green-tint" : "bg-sheet"}`}>
+    <label className={`flex min-h-18 cursor-pointer items-center gap-4 rounded-2xl p-4 ${checked ? "bg-green-tint" : "bg-sheet"}`}>
       <input type="checkbox" checked={checked} onChange={onChange} className="peer sr-only" />
       <span
         aria-hidden
@@ -229,7 +229,7 @@ export function Stepper({ value, onChange, labelId }: { value: number; onChange:
           <path d="M6 14h16" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
         </svg>
       </button>
-      <span className="font-display text-[56px] leading-[60px]" aria-live="polite">
+      <span className="font-display text-[56px]/15 " aria-live="polite">
         {value}
       </span>
       <button type="button" aria-label="One more person" onClick={() => onChange(Math.min(50, value + 1))} className={`${btn} bg-ink text-sheet`}>

@@ -20,8 +20,8 @@ function useActive() {
 export function HostSidebar({ title }: { title: string }) {
   const active = useActive();
   return (
-    <aside className="hidden w-[280px] shrink-0 flex-col gap-2 bg-sheet p-7 md:flex">
-      <p className="font-display text-[25px] leading-[29px]">{title}</p>
+    <aside className="hidden w-70 shrink-0 flex-col gap-2 bg-sheet p-7 md:flex">
+      <p className="font-display text-[25px]/7.25 ">{title}</p>
       <p className="text-lg text-muted">Host view</p>
       <nav aria-label="Host" className="mt-5 flex flex-col gap-2">
         {items.map((i) => (
@@ -29,7 +29,7 @@ export function HostSidebar({ title }: { title: string }) {
             key={i.href}
             href={i.href}
             aria-current={active(i.href) ? "page" : undefined}
-            className={`flex h-[52px] items-center rounded-xl px-4 text-[19px] ${active(i.href) ? "bg-green-tint font-semibold" : "font-medium text-muted"}`}
+            className={`flex h-13 items-center rounded-xl px-4 text-[19px] ${active(i.href) ? "bg-green-tint font-semibold" : "font-medium text-muted"}`}
           >
             {i.label}
           </Link>

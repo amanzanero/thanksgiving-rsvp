@@ -46,8 +46,8 @@ export function MergeForm({
   }
 
   return (
-    <Sheet className="flex flex-col gap-[18px] p-7">
-      <form onSubmit={submit} className="flex flex-col gap-[18px]" noValidate>
+    <Sheet className="flex flex-col gap-4.5 p-7">
+      <form onSubmit={submit} className="flex flex-col gap-4.5" noValidate>
         <h2 className="font-display text-[28px]/8">Merge {entries.length} entries</h2>
         <p className="text-lg/6 text-muted">
           {entries.map((e) => e.name).join(" and ")} become one entry. Both browsers will open the merged entry.
@@ -57,7 +57,7 @@ export function MergeForm({
           Total people
         </p>
         <Stepper value={party} onChange={setParty} labelId="merge-party" />
-        <p className="text-[17px] leading-[23px] text-muted">
+        <p className="text-[17px]/5.75  text-muted">
           {entries.map((e) => e.partySize).join(" and ")} {entries.length > 1 ? "were" : "was"} entered, so sizes aren&apos;t added together. Change it if that&apos;s wrong.
         </p>
         {conflicts.map((c) => (
@@ -69,7 +69,7 @@ export function MergeForm({
             {c.claimants.map((cl) => {
               const on = keep[c.itemId]?.includes(cl.entryId);
               return (
-                <label key={cl.entryId} className={`flex min-h-[72px] cursor-pointer items-center gap-4 rounded-2xl p-4 ${on ? "bg-green-tint" : "bg-tablecloth"}`}>
+                <label key={cl.entryId} className={`flex min-h-18 cursor-pointer items-center gap-4 rounded-2xl p-4 ${on ? "bg-green-tint" : "bg-tablecloth"}`}>
                   <input
                     type={c.quantityNeeded === 1 ? "radio" : "checkbox"}
                     name={`keep-${c.itemId}`}
