@@ -26,7 +26,7 @@ export default async function Merge({ searchParams }: PageProps<"/host/merge">) 
         <div className="hidden min-w-0 flex-1 xl:block">
           <GuestTable guests={guests} selectable={false} highlight={ids} />
         </div>
-        <div className="xl:w-[400px] xl:shrink-0">
+        <div className="xl:w-100 xl:shrink-0">
           <MergeForm ids={ids} {...preview} />
         </div>
       </div>

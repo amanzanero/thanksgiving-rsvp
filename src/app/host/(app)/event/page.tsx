@@ -9,7 +9,7 @@ export default async function EventPage() {
   const ev = await requireEvent();
   return (
     <>
-      <Title className="hidden md:block md:text-[42px] md:leading-[46px]">Event details</Title>
+      <Title className="hidden md:block md:text-[42px]/11.5 ">Event details</Title>
       <EventForm values={{ title: ev.title, address: ev.address, ...toFormParts(ev.startsAt) }} />
     </>
   );

@@ -95,16 +95,16 @@ export function Sheet({ children, className = "" }: { children: ReactNode; class
 }
 
 export function Title({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <h1 className={`font-display text-[40px] leading-[44px] ${className}`}>{children}</h1>;
+  return <h1 className={`font-display text-[40px]/11  ${className}`}>{children}</h1>;
 }
 
 export function Help({ children }: { children: ReactNode }) {
-  return <p className="text-[20px] leading-[27px] text-muted">{children}</p>;
+  return <p className="text-[20px]/6.75  text-muted">{children}</p>;
 }
 
 export function ErrorBox({ children, id }: { children: ReactNode; id?: string }) {
   return (
-    <div id={id} role="alert" className="rounded-2xl bg-amber-tint p-4 text-[19px] leading-[26px] font-medium">
+    <div id={id} role="alert" className="rounded-2xl bg-amber-tint p-4 text-[19px]/6.5  font-medium">
       {children}
     </div>
   );
@@ -173,7 +173,7 @@ export function Divider() {
 
 export function Page({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <main className={`relative mx-auto flex min-h-dvh w-full max-w-[438px] flex-col gap-6 px-6 pt-[60px] pb-10 ${className}`}>
+    <main className={`relative mx-auto flex min-h-dvh w-full max-w-109.5 flex-col gap-6 px-6 pt-15 pb-10 ${className}`}>
       {children}
     </main>
   );

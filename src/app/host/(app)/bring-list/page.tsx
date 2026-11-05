@@ -10,7 +10,7 @@ export default async function BringListPage() {
   const items = await hostBringList(db());
   return (
     <>
-      <Title className="hidden md:block md:text-[42px] md:leading-[46px]">Bring list</Title>
+      <Title className="hidden md:block md:text-[42px]/11.5 ">Bring list</Title>
       <Sheet className="px-5 py-3.5 min-[360px]:px-7">
         {items.length === 0 && <p className="py-4 text-lg text-muted">Nothing on the list yet. Add the first item.</p>}
         {items.map((it, i) => {
@@ -27,7 +27,7 @@ export default async function BringListPage() {
       </Sheet>
       <p className="text-lg/6 text-muted">Names show here because you are the host. Guests who have not signed up only see Taken. Tap an item to edit it.</p>
       <div className="md:w-fit">
-        <ButtonLink href="/host/bring-list/new" variant="secondary" className="md:min-w-[220px]">
+        <ButtonLink href="/host/bring-list/new" variant="secondary" className="md:min-w-55">
           Add an item
         </ButtonLink>
       </div>

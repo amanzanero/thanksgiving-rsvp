@@ -11,9 +11,9 @@ export default async function HostLayout({ children }: LayoutProps<"/host">) {
   return (
     <div className="flex min-h-dvh">
       <HostSidebar title={ev.title} />
-      <div className="mx-auto flex w-full max-w-[1040px] min-w-0 flex-1 flex-col gap-6 px-6 pt-[60px] pb-10 md:px-12 md:pt-12">
+      <div className="mx-auto flex w-full max-w-260 min-w-0 flex-1 flex-col gap-6 px-6 pt-15 pb-10 md:px-12 md:pt-12">
         <div className="flex flex-col gap-2 md:hidden">
-          <p className="font-display text-[38px] leading-[42px]">Host view</p>
+          <p className="font-display text-[38px]/10.5 ">Host view</p>
           <p className="text-xl text-muted">{ev.title}</p>
         </div>
         <HostTabs />

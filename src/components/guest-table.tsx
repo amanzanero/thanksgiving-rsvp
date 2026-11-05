@@ -39,8 +39,8 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
         <div className="hidden items-center gap-4 px-4 pb-2 text-base font-semibold text-muted @min-[560px]:flex">
           <span className="w-7" />
           <span className="flex-1">Name</span>
-          <span className="w-[240px]">Dishes</span>
-          <span className="w-[60px] text-right">People</span>
+          <span className="w-60">Dishes</span>
+          <span className="w-15 text-right">People</span>
         </div>
         {guests.length === 0 && <p className="p-4 text-lg text-muted">Nobody yet.</p>}
         <ul className="flex flex-col gap-0.5">
@@ -64,9 +64,9 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col @min-[560px]:flex-row @min-[560px]:items-center @min-[560px]:gap-4">
                   <span className="min-w-0 flex-1 text-xl font-medium wrap-anywhere">{g.name}</span>
-                  <span className="min-w-0 text-base text-muted wrap-anywhere @min-[560px]:w-[240px] @min-[560px]:text-lg">{g.dishes.length ? g.dishes.join(", ") : "No dish yet"}</span>
+                  <span className="min-w-0 text-base text-muted wrap-anywhere @min-[560px]:w-60 @min-[560px]:text-lg">{g.dishes.length ? g.dishes.join(", ") : "No dish yet"}</span>
                 </span>
-                <span className="font-display text-[26px] @min-[560px]:w-[60px] @min-[560px]:text-right">{g.partySize}</span>
+                <span className="font-display text-[26px] @min-[560px]:w-15 @min-[560px]:text-right">{g.partySize}</span>
               </label>
             </li>
           ))}
@@ -79,7 +79,7 @@ export function GuestTable({ guests, selectable = true, highlight = [] }: { gues
       )}
       {only && confirming && (
         <div role="alertdialog" aria-label={`Remove ${only.name}`} className="flex flex-col gap-4 rounded-2xl bg-amber-tint p-4">
-          <p className="text-[19px] leading-[26px] font-medium">
+          <p className="text-[19px]/6.5  font-medium">
             Remove {only.name}? Their spot ({only.partySize} {only.partySize === 1 ? "person" : "people"}) and dishes will be released. They can sign up again if they want.
           </p>
           <div className="flex flex-col gap-2 md:flex-row">

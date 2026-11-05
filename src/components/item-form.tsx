@@ -10,7 +10,7 @@ export function ItemForm({ item, claimers }: { item?: { id: string; label: strin
   const [qty, setQty] = useState(item?.quantityNeeded ?? 1);
   const edit = !!item;
   return (
-    <div className="flex max-w-[560px] flex-col gap-6">
+    <div className="flex max-w-140 flex-col gap-6">
       <BackLink href="/host/bring-list" />
       <div className="flex flex-col gap-2.5">
         <Title>{edit ? "Edit item" : "Add an item"}</Title>
