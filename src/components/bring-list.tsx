@@ -6,7 +6,10 @@ type Row = PublicItem | SignedInItem;
 export function noteFor(it: Row): string | null {
   if ("claimers" in it) {
     const names = [...(it.mine && it.claimers.length ? ["You"] : []), ...it.claimers];
-    if (names.length) return names.join(" and ");
+    if (names.length) {
+      const who = names.join(" and ");
+      return it.quantityNeeded > 1 ? `${who} · ${it.claimed} of ${it.quantityNeeded} taken` : who;
+    }
   }
   if (it.quantityNeeded > 1) return it.claimed > 0 && it.claimed < it.quantityNeeded ? `${it.claimed} of ${it.quantityNeeded} taken` : `${it.quantityNeeded} needed`;
   return null;
