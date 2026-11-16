@@ -28,6 +28,17 @@ try {
         ["Pumpkin pie", 2],
         ["Drinks", 1],
         ["Ice", 1],
+        ["Gravy", 1],
+        ["Cranberry sauce", 1],
+        ["Green beans", 1],
+        ["Sweet potatoes", 1],
+        ["Salad", 2],
+        ["Veggie or cheese tray", 1],
+        ["Cornbread", 1],
+        ["Vegetarian main", 1],
+        ["Whipped cream", 1],
+        ["Coffee and tea", 1],
+        ["Plates, cups and napkins", 1],
       ];
       for (const [i, [label, qty]] of items.entries()) {
         await tx`insert into item (label, quantity_needed, added_by, sort_order) values (${label}, ${qty}, 'host', ${i})`;

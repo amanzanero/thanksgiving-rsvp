@@ -84,25 +84,30 @@ async function log(
 
 // ---- Bring list -----------------------------------------------------------
 
-export type PublicItem = {
+export type BringItem = {
   id: string;
   label: string;
   quantityNeeded: number;
   claimed: number;
   status: "taken" | "needed";
-};
-
-/** Only returned to a signed-up viewer. */
-export type SignedInItem = PublicItem & {
+  /** Short names of the other guests bringing this, like "Andrew M.". */
   claimers: string[];
+  /** True when the viewer is bringing this. Always false for a visitor who is not signed up. */
   mine: boolean;
 };
 
+/** "Andrew Manzanero" becomes "Andrew M.". Merged names like "Sue and Bob Smith" stay as they are. */
+export function shortName(displayName: string) {
+  const parts = displayName.trim().split(/\s+/);
+  if (parts.length !== 2) return displayName;
+  return `${parts[0]} ${[...parts[1]][0].toUpperCase()}.`;
+}
+
 /**
- * The visibility rule lives here. A viewer who is not signed up as coming gets
- * rows with no names at all, so names can't leak to the browser.
+ * Anyone with the link sees who is bringing what, as first name and last initial.
+ * The host chose this over hiding names until sign up.
  */
-export async function getBringList(db: Db, viewerEntryId: string | null): Promise<PublicItem[] | SignedInItem[]> {
+export async function getBringList(db: Db, viewerEntryId: string | null): Promise<BringItem[]> {
   const items = await db
     .select()
     .from(item)
@@ -120,31 +125,19 @@ export async function getBringList(db: Db, viewerEntryId: string | null): Promis
     .innerJoin(entry, eq(claim.entryId, entry.id))
     .where(and(eq(entry.status, "coming"), isNull(entry.mergedIntoId)));
 
-  const base = items.map((it) => {
+  return items.map((it) => {
     const mine = claims.filter((c) => c.itemId === it.id);
     const claimed = mine.reduce((n, c) => n + c.quantity, 0);
-    return { it, mine, claimed };
-  });
-
-  if (!viewerEntryId) {
-    return base.map(({ it, claimed }) => ({
+    return {
       id: it.id,
       label: it.label,
       quantityNeeded: it.quantityNeeded,
       claimed,
       status: claimed >= it.quantityNeeded ? ("taken" as const) : ("needed" as const),
-    }));
-  }
-
-  return base.map(({ it, mine, claimed }) => ({
-    id: it.id,
-    label: it.label,
-    quantityNeeded: it.quantityNeeded,
-    claimed,
-    status: claimed >= it.quantityNeeded ? ("taken" as const) : ("needed" as const),
-    claimers: mine.filter((c) => c.entryId !== viewerEntryId).map((c) => c.name),
-    mine: mine.some((c) => c.entryId === viewerEntryId),
-  }));
+      claimers: mine.filter((c) => c.entryId !== viewerEntryId).map((c) => shortName(c.name)),
+      mine: viewerEntryId !== null && mine.some((c) => c.entryId === viewerEntryId),
+    };
+  });
 }
 
 // ---- Identity -------------------------------------------------------------

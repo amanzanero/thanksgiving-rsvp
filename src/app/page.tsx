@@ -2,7 +2,7 @@ import { BringList } from "@/components/bring-list";
 import { ButtonLink, Page, TextLink, Title } from "@/components/ui";
 import { formatEvent } from "@/lib/event-format";
 import { directionsUrl } from "@/lib/maps";
-import { getBringList, type SignedInItem } from "@/server/guest";
+import { getBringList } from "@/server/guest";
 import { db, getViewer, requireEvent } from "@/server/context";
 
 export const dynamic = "force-dynamic";
@@ -18,20 +18,20 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <Page>
         <header className="flex flex-col gap-3.5">
           <h1 className="font-display text-[38px]/10.5  min-[360px]:text-[44px]/12 ">{ev.title}</h1>
-          <p className="text-[21px]/7 text-muted">Come hungry, and tell us what you&apos;ll bring.</p>
+          <p className="text-[21px]/7 text-muted">Come hungry. Pick something that is still needed, or bring your own dish.</p>
         </header>
         <Details date={date} time={time} />
         <div className="flex flex-col gap-2">
           <ButtonLink href="/join">I&apos;m coming</ButtonLink>
           <TextLink href="/find">Already signed up?</TextLink>
         </div>
-        <BringList items={items} hint="Sign up to see who's bringing what." />
+        <BringList items={items} hint="Tap a dish that is still needed to sign up with it." pickHref={(id) => `/join?dish=${id}`} addHref="/join?add=1" />
       </Page>
     );
   }
 
   const first = viewer.displayName.split(" ")[0];
-  const mine = (items as SignedInItem[]).filter((i) => i.mine).map((i) => i.label);
+  const mine = items.filter((i) => i.mine).map((i) => i.label);
   const saved = sp.saved === "1";
   return (
     <Page>
@@ -56,7 +56,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       </div>
       <ButtonLink href="/change">Change my party or dish</ButtonLink>
       <Details date={date} time={time} address={ev.address} />
-      <BringList items={items} hint="You are signed up, so you can see who is bringing what." />
+      <BringList items={items} hint="Tap a dish that is still needed to add it to yours." pickHref={(id) => `/change?dish=${id}`} addHref="/change?add=1" />
       <TextLink href="/cancel" tone="amber">
         I can&apos;t make it anymore
       </TextLink>
