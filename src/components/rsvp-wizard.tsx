@@ -4,29 +4,36 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { signUpAction, updateAction } from "@/app/actions";
-import type { PublicItem, SignedInItem } from "@/server/guest";
+import type { BringItem } from "@/server/guest";
 import { noteFor, BringRow } from "./bring-list";
 import { BackLink, Button, ErrorBox, Field, Help, Pill, Sheet, TextButton, Title, Divider } from "./ui";
 
-type Row = PublicItem | SignedInItem;
+type Row = BringItem;
+
+const QUICK_DISHES = ["Green bean casserole", "Salad", "Appetizer", "Dessert", "Cranberry sauce", "Veggie tray"];
 type Step = "who" | "dishes" | "add";
 
 export function RsvpWizard({
   mode,
   items,
   initial,
+  preselect,
+  openAdd,
 }: {
   mode: "new" | "edit";
   items: Row[];
   initial?: { firstName: string; lastName: string; partySize: number; selected: string[] };
+  preselect?: string;
+  openAdd?: boolean;
 }) {
   const router = useRouter();
   const [pending, start] = useTransition();
-  const [step, setStep] = useState<Step>("who");
+  // Edit mode skips the name step. A guest who tapped "Add your own dish" lands on that step first.
+  const [step, setStep] = useState<Step>(mode === "edit" ? (openAdd ? "add" : preselect ? "dishes" : "who") : "who");
   const [first, setFirst] = useState(initial?.firstName ?? "");
   const [last, setLast] = useState(initial?.lastName ?? "");
   const [party, setParty] = useState(initial?.partySize ?? 2);
-  const [selected, setSelected] = useState<string[]>(initial?.selected ?? []);
+  const [selected, setSelected] = useState<string[]>([...(initial?.selected ?? []), ...(preselect && items.some((i) => i.id === preselect && i.status === "needed") ? [preselect] : [])]);
   const [added, setAdded] = useState<string[]>([]);
   const [draft, setDraft] = useState("");
   const [website, setWebsite] = useState("");
@@ -34,7 +41,7 @@ export function RsvpWizard({
   const [formError, setFormError] = useState<{ message: string; code?: string } | null>(null);
 
   const edit = mode === "edit";
-  const pickable = items.filter((i) => i.status === "needed" || ("mine" in i && i.mine));
+  const pickable = items.filter((i) => i.status === "needed" || i.mine);
   const taken = items.filter((i) => !pickable.includes(i));
   // A dish that was taken while this form was open drops out of the selection.
   const chosen = selected.filter((id) => pickable.some((p) => p.id === id));
@@ -46,7 +53,7 @@ export function RsvpWizard({
     setErrors(e);
     if (Object.keys(e).length) return;
     setFormError(null);
-    setStep("dishes");
+    setStep(openAdd && added.length === 0 ? "add" : "dishes");
   }
 
   function submit(ids: string[], dishes: string[]) {
@@ -142,9 +149,16 @@ export function RsvpWizard({
         </button>
         <div className="flex flex-col gap-2.5">
           <Title>Add your dish</Title>
-          <Help>Type what you&apos;re bringing. Everyone can see it on the list.</Help>
+          <Help>Tap an idea or type your own. Everyone can see it on the list.</Help>
         </div>
         <Field label="Dish name" name="dish" value={draft} onChange={(e) => { setDraft(e.target.value); setErrors({}); }} error={errors.draft} placeholder="Grandma's green bean casserole" maxLength={80} autoFocus />
+        <div className="flex flex-wrap gap-2.5" aria-label="Ideas">
+          {QUICK_DISHES.filter((q) => !items.some((i) => i.label.toLowerCase() === q.toLowerCase())).map((q) => (
+            <button key={q} type="button" onClick={() => { setDraft(q); setErrors({}); }} className="min-h-12 rounded-full bg-green-tint px-4 text-lg font-semibold">
+              {q}
+            </button>
+          ))}
+        </div>
         <div className="mt-auto" />
         <Button type="submit">Add dish</Button>
       </form>

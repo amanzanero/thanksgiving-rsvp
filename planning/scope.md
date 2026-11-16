@@ -29,7 +29,7 @@ Personal use, one event, low traffic (probably under 50 people). Simple beats cl
 
 ### 2. Bring list (public)
 - Host predefines items, for example: turkey, mashed potatoes, rolls, pumpkin pie, drinks, ice.
-- Everyone sees each item as **Taken** or **Still needed**.
+- Everyone sees each item as **Still needed** or **Taken**, with who is bringing it.
 - A guest can claim an item, release it, or add their own dish ("Grandma's green bean casserole").
 - Optional per item: how many are needed (for example, 2 pies).
 

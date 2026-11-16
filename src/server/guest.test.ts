@@ -9,7 +9,6 @@ import {
   signUp,
   updateEntry,
   type Db,
-  type SignedInItem,
 } from "./guest";
 import { getChangeLog } from "./host";
 
@@ -22,24 +21,26 @@ const join = async (first: string, last: string, extra: Partial<Parameters<typeo
   signUp(db, { firstName: first, lastName: last, partySize: 2, ...extra });
 
 describe("visibility", () => {
-  it("never includes names for a visitor who is not signed up", async () => {
+  it("shows first name and last initial to a visitor who is not signed up", async () => {
     await join("Sue", "Smith", { itemIds: [await itemId(db, "Turkey")] });
     const list = await getBringList(db, null);
-    expect(JSON.stringify(list)).not.toContain("Sue");
-    expect(list.find((i) => i.label === "Turkey")!.status).toBe("taken");
-    expect("claimers" in list[0]).toBe(false);
+    const turkey = list.find((i) => i.label === "Turkey")!;
+    expect(turkey.status).toBe("taken");
+    expect(turkey.claimers).toEqual(["Sue S."]);
+    expect(turkey.mine).toBe(false);
+    expect(JSON.stringify(list)).not.toContain("Smith");
   });
 
-  it("shows other guests' names once signed up, and marks your own dish", async () => {
+  it("shows other guests' names to a signed-up guest, and marks your own dish", async () => {
     const sue = await join("Sue", "Smith", { itemIds: [await itemId(db, "Turkey")] });
     const bob = await join("Bob", "Jones", { itemIds: [await itemId(db, "Drinks")] });
-    const list = (await getBringList(db, bob.entryId)) as SignedInItem[];
-    expect(list.find((i) => i.label === "Turkey")!.claimers).toEqual(["Sue Smith"]);
+    const list = await getBringList(db, bob.entryId);
+    expect(list.find((i) => i.label === "Turkey")!.claimers).toEqual(["Sue S."]);
     expect(list.find((i) => i.label === "Drinks")!.mine).toBe(true);
     expect(sue.entryId).not.toBe(bob.entryId);
   });
 
-  it("goes back to hidden names after cancelling", async () => {
+  it("stops resolving the browser after cancelling", async () => {
     const sue = await join("Sue", "Smith");
     expect(await resolveViewer(db, sue.token)).not.toBeNull();
     await cancelEntry(db, sue.entryId);

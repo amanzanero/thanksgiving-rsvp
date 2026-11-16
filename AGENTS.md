@@ -24,7 +24,7 @@ npm run build
 
 ## Rules that must not break
 
-- Guest names are never sent to a visitor who is not signed up as coming. The rule lives in `getBringList` in `src/server/guest.ts`. Do not add another query that returns names.
+- Anyone with the link sees who is bringing what, but only as first name and last initial ("Andrew M."). This is decided. It lives in `getBringList` and `shortName` in `src/server/guest.ts`. Full names stay out of public queries.
 - Only the host sees the full guest list and party sizes.
 - The browser never talks to the database. `src/db/index.ts` is server-only.
 

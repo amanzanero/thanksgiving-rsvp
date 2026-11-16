@@ -10,4 +10,4 @@
 
 - Everything goes through server code. The browser never talks to the database.
 - Claims are checked against `quantityNeeded` in a transaction (`setClaims`). Keep that.
-- Guest name visibility is enforced in `getBringList`. See the root AGENTS.md.
+- Names on the bring list are shortened in `getBringList` (first name and last initial). See the root AGENTS.md.
